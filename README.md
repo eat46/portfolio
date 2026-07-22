@@ -12,6 +12,16 @@ Another core challenge was Vite's reliance on native ES Modules, which broke Com
 
 Perhaps the most important decision, though, was knowing when *not* to upgrade. Both D3 and Highcharts had newer major versions available, but bumping them introduced breaking changes — D3 v7's removal of the global `d3.event` broke several custom chart components, and major Highcharts version jumps risked visual regressions across dozens of chart types already in production. Rather than chasing the latest versions, I evaluated the actual risk-to-benefit ratio and kept these libraries pinned, prioritizing stability for a production financial tool over technical novelty.
 
+## Financial Statement Extraction from PDF Reports Using LLM Structured Output
+
+Built a tool that extracts key financial metrics from Taiwan-listed companies' quarterly reports — converting scanned PDF income statements into structured JSON/CSV, with Claude's structured output enforcing a strict schema so extraction results are consistent and machine-readable.
+
+A key design decision was separating what the LLM extracts from what gets calculated. Rather than asking the model to compute ratios like gross margin or operating margin — which risks silent rounding errors or fabricated numbers — the LLM only extracts raw figures printed on the statement (revenue, cost, gross profit, operating income, net income, EPS). All derived ratios and cross-checks are computed deterministically in a separate validation layer.
+
+That validation layer surfaces a subtlety specific to Taiwan's consolidated financial statements: companies with intra-group transactions report a pre-adjustment gross profit line and a separate net gross profit line after eliminating unrealized intercompany gains. Reconstructing gross profit as simply revenue minus cost only holds exactly against the pre-adjustment figure — treating it as a hard equality against the reported (post-adjustment) number produces false-positive warnings for companies with subsidiary structures. The validation layer distinguishes "arithmetic must hold exactly" from "a real accounting adjustment exists here," rather than collapsing both into one fuzzy tolerance threshold.
+
+Like the earlier CRA-to-Vite migration, the LLM provider itself is abstracted behind a common interface, so switching between Claude and Gemini is a single environment variable change rather than a rewrite.
+
 ## Performance Optimization for Multi-Chart Comparison Dashboard
 
 Built a peer comparison dashboard displaying 10+ charts simultaneously — covering revenue forecasts, profitability trends, valuation multiples, and capital expenditure — each comparing a selected stock against multiple industry peers across different time ranges.
@@ -35,3 +45,7 @@ Built a financial ratio treemap using Highcharts to help investors instantly ide
 The core design challenge was the color logic: rather than using absolute values, each indicator's color reflects the delta between the earliest and latest data points in the selected time range — with red indicating growth and green indicating decline, following Taiwan market conventions. Color opacity scales with the magnitude of change, allowing users to spot outliers at a glance without reading individual numbers.
 
 The system supports unlimited cross-category and cross-stock comparisons, with indicators selectable across custom-defined groups. A patented drag-and-drop interaction allows users to pull any indicator directly onto a comparison chart for on-the-fly multi-metric analysis.
+
+## Other Projects
+
+- **[Calculators](https://github.com/eat46/calculators)** — A set of investing calculators for Taiwan stock investors (dividend yield entry price, CAGR, ex-dividend reference price, scenario-weighted fair value). [Live Demo](https://eat46-calculators.vercel.app/)
