@@ -20,7 +20,7 @@ A key design decision was separating what the LLM extracts from what gets calcul
 
 That validation layer surfaces a subtlety specific to Taiwan's consolidated financial statements: companies with intra-group transactions report a pre-adjustment gross profit line and a separate net gross profit line after eliminating unrealized intercompany gains. Reconstructing gross profit as simply revenue minus cost only holds exactly against the pre-adjustment figure — treating it as a hard equality against the reported (post-adjustment) number produces false-positive warnings for companies with subsidiary structures. The validation layer distinguishes "arithmetic must hold exactly" from "a real accounting adjustment exists here," rather than collapsing both into one fuzzy tolerance threshold.
 
-Like the earlier CRA-to-Vite migration, the LLM provider itself is abstracted behind a common interface, so switching between Claude and Gemini is a single environment variable change rather than a rewrite.
+The LLM provider itself is abstracted behind a common interface, so switching between Claude and Gemini is a single environment variable change rather than a rewrite.
 
 ## Performance Optimization for Multi-Chart Comparison Dashboard
 
