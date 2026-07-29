@@ -46,13 +46,15 @@ D3 was chosen over Highcharts for this feature because it offered more flexibili
 
 The chart works alongside a separate hard-filter system — users first narrow down stocks using binary screening criteria (e.g., volume thresholds, technical signals), then the radar chart visualizes how the filtered stock performs across ten weighted dimensions, with raw business metrics converted into normalized 0-100 scores by the backend.
 
-## Financial Statement Visualization with Interactive Treemap
+## Structure-Preserving Financial Heatmap with Interactive Analysis
 
-Built a financial ratio treemap using Highcharts to help investors instantly identify a company's performance trends — turning dense financial data into an intuitive visual overview.
+Built a financial statement visualization that lets investors scan a company's income statement, balance sheet, cash flow, and financial ratios — and instantly spot which line items are improving or deteriorating, turning 20–40 dense accounting figures per statement into a pre-attentive visual scan.
 
-The core design challenge was the color logic: rather than using absolute values, each indicator's color reflects the delta between the earliest and latest data points in the selected time range — with red indicating growth and green indicating decline, following Taiwan market conventions. Color opacity scales with the magnitude of change, allowing users to spot outliers at a glance without reading individual numbers.
+The left panel is a hand-built heatmap tile grid (CSS Grid + dnd-kit). Each tile is an accounting item, positioned to mirror real financial-statement layouts — assets on the left, liabilities and equity on the right; a revenue-to-net-income waterfall top to bottom — with six templates tailored to each sector's statement structure (financial holding, brokerage, insurance and etc).
 
-The system supports unlimited cross-category and cross-stock comparisons, with indicators selectable across custom-defined groups. A patented drag-and-drop interaction allows users to pull any indicator directly onto a comparison chart for on-the-fly multi-metric analysis.
+This layout was a deliberate choice over three alternatives: a true treemap (area-encoding breaks on negative accounting values, and algorithmic layout destroys the familiar statement structure), bar charts or tables (too slow for at-a-glance screening across dozens of items), and off-the-shelf chart libraries (their nodes can't serve as drag sources — DOM tiles can). Each tile doubles as an interactive control: click to see its trend in the right-panel Highcharts time-series, or drag it onto the chart for on-the-fly cross-statement comparison.
+
+Color encodes the delta between the earliest and latest points in the selected range — red for growth, green for decline (Taiwan market convention) — with opacity scaling to magnitude, so users spot outliers without reading a single number.
 
 ## Other Projects
 
