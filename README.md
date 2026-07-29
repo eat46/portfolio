@@ -46,15 +46,13 @@ D3 was chosen over Highcharts for this feature because it offered more flexibili
 
 The chart works alongside a separate hard-filter system — users first narrow down stocks using binary screening criteria (e.g., volume thresholds, technical signals), then the radar chart visualizes how the filtered stock performs across ten weighted dimensions, with raw business metrics converted into normalized 0-100 scores by the backend.
 
-## Structure-Preserving Financial Heatmap with Interactive Analysis
+## Financial Statement Visualization
 
-Built a financial statement visualization that lets investors scan a company's income statement, balance sheet, cash flow, and financial ratios — and instantly spot which line items are improving or deteriorating, turning 20–40 dense accounting figures per statement into a pre-attentive visual scan.
+Designed and built the front-end for a financial-statement visualization feature that lets investors quickly scan a company's core statements and spot which line items are improving or deteriorating, turning dozens of dense accounting figures into an at-a-glance visual overview.
 
-The left panel is a hand-built heatmap tile grid (CSS Grid + dnd-kit). Each tile is an accounting item, positioned to mirror real financial-statement layouts — assets on the left, liabilities and equity on the right; a revenue-to-net-income waterfall top to bottom — with six templates tailored to each sector's statement structure (financial holding, brokerage, insurance and etc).
+The main challenge was choosing the right visual representation for a screening task: I evaluated several approaches against the specific constraints of financial data — including how to handle negative values, how to preserve the statement structure that investors already know, and how to keep the interface fast to scan across many items — and made deliberate trade-offs between them.
 
-This layout was a deliberate choice over three alternatives: a true treemap (area-encoding breaks on negative accounting values, and algorithmic layout destroys the familiar statement structure), bar charts or tables (too slow for at-a-glance screening across dozens of items), and off-the-shelf chart libraries (their nodes can't serve as drag sources — DOM tiles can). Each tile doubles as an interactive control: click to see its trend in the right-panel Highcharts time-series, or drag it onto the chart for on-the-fly cross-statement comparison.
-
-Color encodes the delta between the earliest and latest points in the selected range — red for growth, green for decline (Taiwan market convention) — with opacity scaling to magnitude, so users spot outliers without reading a single number.
+The result was an interface that overlays growth/decline signals onto a familiar statement layout, letting domain users perform anomaly detection with essentially no learning curve — something neither a plain table nor a generic chart could provide.
 
 ## Other Projects
 
